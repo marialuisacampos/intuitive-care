@@ -1,0 +1,40 @@
+{
+  "name": "intuitive-care",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "nodemonConfig": {
+    "watch": [
+      "*.js"
+    ],
+    "ext": "js",
+    "ignore": [
+      "*.test.js"
+    ],
+    "delay": "3"
+  },
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marialuisacampos/intuitive-care.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marialuisacampos/intuitive-care/issues"
+  },
+  "homepage": "https://github.com/marialuisacampos/intuitive-care#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.3.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.16"
+  }
+}
