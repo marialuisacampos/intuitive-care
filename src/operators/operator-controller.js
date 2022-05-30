@@ -4,6 +4,7 @@ const {
   deleteOperatorOnDatabase,
   searchAllOperatorsOnDatabase,
   updateOperatorOnDatabase,
+  searchOperatorOnDatase,
 } = require('./operator-service');
 
 const registerNewOperator = async (req, res) => {
@@ -40,6 +41,23 @@ const searchAllOperators = async (req, res) => {
       message: 'Error finding operators',
       error,
      });
+  };
+};
+
+const searchOperatorByFilter = async (req, res) => {
+  try {
+    const { searchBy, filter, page, limit } = req.query;
+    const operators = await searchOperatorOnDatase(searchBy, filter, page, limit);
+
+    if(operators.length === 0) {
+      return res.status(400).json({ message: `There is no operator with this ${searchBy}: ${filter}` });
+    }
+    return res.status(200).json(operators);
+  } catch(error) {
+    res.status(404).json({
+      message: 'Error finding operators.',
+      error,
+    });
   };
 };
 
@@ -87,4 +105,5 @@ module.exports = {
   deleteOperator,
   searchAllOperators,
   updateOperator,
+  searchOperatorByFilter,
 };

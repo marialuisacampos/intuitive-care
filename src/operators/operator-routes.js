@@ -3,6 +3,7 @@ const {
   deleteOperator,
   searchAllOperators,
   updateOperator,
+  searchOperatorByFilter,
 } = require('./operator-controller')
 
 module.exports = (app) => {
@@ -15,10 +16,14 @@ module.exports = (app) => {
     defaultRoute,
     searchAllOperators,
   );
+  app.get(
+    `${defaultRoute}/search`,
+    searchOperatorByFilter,
+  );
   app.put(
     `${defaultRoute}/:ansRegister`,
     updateOperator,
-  )
+  );
   app.delete(
     `${defaultRoute}/:ansRegister`,
     deleteOperator
