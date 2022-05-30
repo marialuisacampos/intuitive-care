@@ -1,5 +1,8 @@
 const {
   registerNewOperator,
+  deleteOperator,
+  searchAllOperators,
+  updateOperator,
 } = require('./operator-controller')
 
 module.exports = (app) => {
@@ -7,5 +10,17 @@ module.exports = (app) => {
   app.post(
     defaultRoute,
     registerNewOperator,
+  );
+  app.get(
+    defaultRoute,
+    searchAllOperators,
+  );
+  app.put(
+    `${defaultRoute}/:ansRegister`,
+    updateOperator,
+  )
+  app.delete(
+    `${defaultRoute}/:ansRegister`,
+    deleteOperator
   );
 };
