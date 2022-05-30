@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { connectionString } = require('./config/database');
 const healthRoute = require('./config/health');
+const operatorsRoutes = require('./operators/operator-routes');
 
 const createServer = () => {
   const app = express();
@@ -16,6 +17,7 @@ const configurateServer = (app) => {
 
 const configurateRoutes = (app) => {
   healthRoute(app);
+  operatorsRoutes(app);
 };
 
 const initServer = async (app, port = 3000) => {
