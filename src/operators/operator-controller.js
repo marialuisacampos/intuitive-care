@@ -6,6 +6,7 @@ const {
   updateOperatorOnDatabase,
   searchOperatorOnDatase,
 } = require('./operator-service');
+const operatorsCsvFile = require('../csv/operators.json');
 
 const registerNewOperator = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ const registerNewOperator = async (req, res) => {
     const { ansRegister } = newOperator;
     const verifyExistenceOfOperator = await verifyExistentOperatorOnDatabase(ansRegister);
 
-    if (verifyExistenceOfOperator) {
+    if (verifyExistenceOfOperator.length !== 0) {
       return res.status(400).json({ message: `ANS Register ${ansRegister} already exists` });
     } else {
       const operatorRegistered = await registerNewOperatorOnDatabase(newOperator);
@@ -25,6 +26,31 @@ const registerNewOperator = async (req, res) => {
     };
   } catch (error) {
     return res.status(500).send(error);
+  };
+};
+
+const registerOperatorsFromCsvFileOnDatabase = async (req, res) => {
+  try {
+    let i = 0;
+    let ansRegistered = [];
+    while (i < operatorsCsvFile.length) {
+      const ans = operatorsCsvFile[i].ansRegister;
+      const validation = await verifyExistentOperatorOnDatabase(ans)
+      if (ans !== "" && validation.length === 0) {
+        await registerNewOperatorOnDatabase(operatorsCsvFile[i])
+        ansRegistered.push(ans)
+      }
+      i++
+    }
+    return res.status(200).json({
+      message: 'New operators registered',
+      ans: ansRegistered
+    })
+  } catch (error) {
+    return res.status(404).json({
+      message: 'Error registering operators.',
+      erro: Object.keys(error).length === 0 ? 'All operators were already registered' : error
+    });
   };
 };
 
@@ -67,7 +93,7 @@ const updateOperator = async (req, res) => {
     const operatorToUpdate = req.body;
     const verifyExistenceOfOperator = await verifyExistentOperatorOnDatabase(ansRegisterToUpdate);
 
-    if(verifyExistenceOfOperator) {
+    if(verifyExistenceOfOperator.length !== 0) {
       await updateOperatorOnDatabase(ansRegisterToUpdate, operatorToUpdate);
       return res.status(200).json({ message: `Operator with ANS Register ${ansRegisterToUpdate} updated.` });
     }
@@ -86,7 +112,7 @@ const deleteOperator = async (req, res) => {
 
     const verifyExistenceOfOperator = await verifyExistentOperatorOnDatabase(ansRegister);
 
-    if(verifyExistenceOfOperator)  {
+    if(verifyExistenceOfOperator.length !== 0)  {
       await deleteOperatorOnDatabase(ansRegister);
       return res.status(200).json({ message: `Operator with ANS Register ${ansRegister} deleted` });
     } else {
@@ -106,4 +132,5 @@ module.exports = {
   searchAllOperators,
   updateOperator,
   searchOperatorByFilter,
+  registerOperatorsFromCsvFileOnDatabase,
 };

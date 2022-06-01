@@ -4,6 +4,7 @@ const {
   searchAllOperators,
   updateOperator,
   searchOperatorByFilter,
+  registerOperatorsFromCsvFileOnDatabase,
 } = require('./operator-controller')
 
 module.exports = (app) => {
@@ -11,6 +12,10 @@ module.exports = (app) => {
   app.post(
     defaultRoute,
     registerNewOperator,
+  );
+  app.post(
+    `${defaultRoute}/csv`,
+    registerOperatorsFromCsvFileOnDatabase,
   );
   app.get(
     defaultRoute,
