@@ -21,11 +21,14 @@ const registerNewOperator = async (req, res) => {
 
       return res.status(200).json({
         message: "Operator registered.",
-        operator: operatorRegistered,
+        operator: operatorRegistered
       });
     };
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(404).json({
+      message: 'Error registering operator',
+      error
+    });
   };
 };
 
