@@ -45,6 +45,10 @@ const registerOperatorsFromCsvFileOnDatabase = async (req, res) => {
       }
       i++
     }
+
+    if(ansRegistered.length === 0) {
+      return res.status(200).json({ message: 'All operators were already registered' })
+    }
     return res.status(200).json({
       message: 'New operators registered',
       ans: ansRegistered
