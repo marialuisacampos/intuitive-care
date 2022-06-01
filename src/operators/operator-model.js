@@ -12,44 +12,34 @@ const registerDate = (current) => {
 
 const operatorSchema = mongoose.Schema({
   ansRegister: {
-    type: String,
-    required: true
+    type: String
   },
   cnpj: {
-    type: String,
-    required: true
+    type: String
   },
   corporateName: {
-    type: String,
-    required: true
+    type: String
   },
   fantasyName: {
-    type: String,
-    required: true
+    type: String
   },
   modality: {
-    type: String,
-    required: true
+    type: String
   },
   adress: {
-    type: String,
-    required: true
+    type: String
   },
   district: {
-    type: String,
-    required: true
+    type: String
   },
   city: {
-    type: String,
-    required: true
+    type: String
   },
   state: {
-    type: String,
-    required: true
+    type: String
   },
   cep: {
-    type: String,
-    required: true
+    type: String
   },
   telephone: {
     type: String
@@ -61,12 +51,10 @@ const operatorSchema = mongoose.Schema({
     type: String
   },
   representative: {
-    type: String,
-    required: true
+    type: String
   },
   representativeJob: {
-    type: String,
-    required: true
+    type: String
   },
   createdAt: {
     type: String,

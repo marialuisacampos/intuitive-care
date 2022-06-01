@@ -51,7 +51,9 @@ const updateOperatorOnDatabase = (operatorRegister, operatorToUpdate) => {
 
 const deleteOperatorOnDatabase = operatorRegister => Operator.findOneAndDelete({ ansRegister: operatorRegister });
 
-const verifyExistentOperatorOnDatabase = ansRegister => Operator.findOne({ ansRegister });
+const verifyExistentOperatorOnDatabase = async ansRegister => {
+  return Operator.find({ ansRegister });
+};
 
 module.exports = {
   registerNewOperatorOnDatabase,

@@ -30,7 +30,8 @@ const jsonRegisterOrganizer = (operatorsArray) => {
     const fax = operator[14];
     const email = operator[15];
     const representative = operator[16];
-    const createdAt = operator[16];
+    const representativeJob = operator[17];
+    const createdAt = operator[18];
 
     return register = {
       ansRegister,
@@ -47,6 +48,7 @@ const jsonRegisterOrganizer = (operatorsArray) => {
       fax,
       email,
       representative,
+      representativeJob,
       createdAt
     }
   });
@@ -58,7 +60,7 @@ const writeRegistersOnJsonFile = (register) => {
   const jsonFile = './operators.json';
   if(jsonFile.length !== 0) {
     const file = JSON.stringify(register).replaceAll('},', '},\n');
-    appendFile(jsonFile, file, error => console.log(`Error writing json file: ${error}`));
+    writeFile(jsonFile, file, error => console.log(`Error writing json file: ${error}`));
   }
 }
 
