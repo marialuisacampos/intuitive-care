@@ -107,7 +107,7 @@ const updateOperator = async (req, res) => {
     return res.status(400).json({ message: `ANS Register ${ansRegisterToUpdate} does not exist.` });
   } catch (error) {
     return res.status(404).json({
-      message: 'Error finding operators.',
+      message: 'Error updating operators.',
       error,
     });
   };
@@ -123,7 +123,7 @@ const deleteOperator = async (req, res) => {
       await deleteOperatorOnDatabase(ansRegister);
       return res.status(200).json({ message: `Operator with ANS Register ${ansRegister} deleted` });
     } else {
-      return res.status(500).json({ message: 'ANS Register does not exist.' });
+      return res.status(400).json({ message: 'ANS Register does not exist.' });
     };
   } catch(error) {
     return res.status(404).json({

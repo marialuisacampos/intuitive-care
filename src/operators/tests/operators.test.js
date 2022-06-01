@@ -94,5 +94,119 @@ describe('Operators Routes', () => {
       .post('/api/operators/csv')
 
     expect(statusCode).toBe(200);
-  })
+  }, 10000);
+
+  it('should not register an operator successfully', async () => {
+    await supertest(app)
+      .post('/api/operators/csv');
+    
+    const { statusCode, body } = await supertest(app)
+      .post('/api/operators/csv');
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual({
+      message: 'All operators were already registered',
+    })
+  }, 20000)
+
+  it('should search all operators', async () => {
+    const { statusCode } = await supertest(app)
+      .get('/api/operators');
+
+    expect(statusCode).toBe(200);
+  });
+
+  it('should search operator by register filter', async () => {
+    const { statusCode, body } = await supertest(app)
+      .get(`/api/operators/search?searchBy=register&filter=${mockOperator.ansRegister}&page=1&limit=1`)
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual([{
+        ...mockOperator,
+        createdAt: expect.any(String),
+        __v: expect.any(Number),
+        _id: expect.any(String)
+    }]);
+  });
+
+  it('should search operator by city filter', async () => {
+    const { statusCode, body } = await supertest(app)
+      .get(`/api/operators/search?searchBy=city&filter=${mockOperator.city}&page=1&limit=1`)
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual([{
+        ...mockOperator,
+        createdAt: expect.any(String),
+        __v: expect.any(Number),
+        _id: expect.any(String)
+    }]);
+  });
+
+  it('should search operator by representative filter', async () => {
+    const { statusCode, body } = await supertest(app)
+      .get(`/api/operators/search?searchBy=representative&filter=${mockOperator.representative}&page=1&limit=1`)
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual([{
+        ...mockOperator,
+        createdAt: expect.any(String),
+        __v: expect.any(Number),
+        _id: expect.any(String)
+    }]);
+  });
+
+  it('should search operator by city filter', async () => {
+    const { statusCode, body } = await supertest(app)
+      .get(`/api/operators/search?searchBy=city&filter=${mockOperator.city}&page=1&limit=1`)
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual([{
+        ...mockOperator,
+        createdAt: expect.any(String),
+        __v: expect.any(Number),
+        _id: expect.any(String)
+    }]);
+  });
+
+  it('should not search if the filter does not exist', async () => {
+    const { statusCode, body } = await supertest(app)
+      .get(`/api/operators/search?searchBy=city&filter=cidade&page=1&limit=1`)
+    
+    expect(statusCode).toBe(400);
+    expect(body).toEqual({ message: `There is no operator with this city: cidade` });
+  });
+
+  it('should update operator successfully', async () => {
+    const { statusCode, body } = await supertest(app)
+      .put(`/api/operators/${mockOperator.ansRegister}`)
+      .send({ representative: 'Representante' })
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual({ message: `Operator with ANS Register ${mockOperator.ansRegister} updated.` });
+  });
+
+  it('should not update operator with ans register inexistent', async () => {
+    const { statusCode, body } = await supertest(app)
+      .put(`/api/operators/1111111`)
+      .send({ representative: 'Representante' })
+    
+    expect(statusCode).toBe(400);
+    expect(body).toEqual({ message: 'ANS Register 1111111 does not exist.' });
+  });
+
+  it('should delete operator successfully', async () => {
+    const { statusCode, body } = await supertest(app)
+      .delete(`/api/operators/${mockOperator.ansRegister}`);
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual({ message: `Operator with ANS Register ${mockOperator.ansRegister} deleted` });
+  });
+
+  it('should not delete operator with ans register inexistent', async () => {
+    const { statusCode, body } = await supertest(app)
+      .delete(`/api/operators/12368724`);
+    
+    expect(statusCode).toBe(400);
+    expect(body).toEqual({ message: 'ANS Register does not exist.' });
+  });
 });
