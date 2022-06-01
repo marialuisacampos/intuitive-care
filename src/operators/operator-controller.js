@@ -56,7 +56,7 @@ const registerOperatorsFromCsvFileOnDatabase = async (req, res) => {
   } catch (error) {
     return res.status(404).json({
       message: 'Error registering operators.',
-      erro: Object.keys(error).length === 0 ? 'All operators were already registered' : error
+      error,
     });
   };
 };

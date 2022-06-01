@@ -89,32 +89,13 @@ describe('Operators Routes', () => {
     expect(body).toEqual({ message: `ANS Register ${mockOperator.ansRegister} already exists` });
   });
 
-  it('should register all operators from csv file', async() => {
-    const { statusCode } = await supertest(app)
-      .post('/api/operators/csv')
-
-    expect(statusCode).toBe(200);
-  }, 10000);
-
-  it('should not register an operator successfully', async () => {
-    await supertest(app)
-      .post('/api/operators/csv');
-    
-    const { statusCode, body } = await supertest(app)
-      .post('/api/operators/csv');
-    
-    expect(statusCode).toBe(200);
-    expect(body).toEqual({
-      message: 'All operators were already registered',
-    })
-  }, 20000)
-
   it('should search all operators', async () => {
     const { statusCode } = await supertest(app)
       .get('/api/operators');
 
     expect(statusCode).toBe(200);
   });
+
 
   it('should search operator by register filter', async () => {
     const { statusCode, body } = await supertest(app)
@@ -193,6 +174,40 @@ describe('Operators Routes', () => {
     expect(statusCode).toBe(400);
     expect(body).toEqual({ message: 'ANS Register 1111111 does not exist.' });
   });
+
+  it('should search all operators and return empty', async () => {
+    await supertest(app)
+      .delete('/api/operators/176259846')
+
+      await supertest(app)
+      .delete('/api/operators/12597654863')
+    
+    const { statusCode, body } = await supertest(app)
+      .get('/api/operators')
+    
+    expect(statusCode).toBe(400);
+    expect(body).toEqual({ message: 'There is no operators on database.' })
+  })
+
+  it('should register all operators from csv file', async() => {
+    const { statusCode } = await supertest(app)
+      .post('/api/operators/csv')
+
+    expect(statusCode).toBe(200);
+  }, 10000);
+
+  it('should not register an operator successfully', async () => {
+    await supertest(app)
+      .post('/api/operators/csv');
+    
+    const { statusCode, body } = await supertest(app)
+      .post('/api/operators/csv');
+    
+    expect(statusCode).toBe(200);
+    expect(body).toEqual({
+      message: 'All operators were already registered',
+    })
+  }, 20000)
 
   it('should delete operator successfully', async () => {
     const { statusCode, body } = await supertest(app)
