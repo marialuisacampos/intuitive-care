@@ -1,5 +1,6 @@
 const {
-  registerNewUser
+  registerNewUser,
+  loginUser
 } = require('./users-controller')
 
 module.exports = (app) => {
@@ -11,5 +12,6 @@ module.exports = (app) => {
 
   app.post(
     `${defaultRoute}/login`,
-  )
-}
+    loginUser
+  );
+};

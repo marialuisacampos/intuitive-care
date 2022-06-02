@@ -5,7 +5,7 @@ const {
 } = require('./users-service');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../authentication/authentication-config');
+const authConfig = require('./authentication-config');
 
 const registerNewUser = async (req, res) => {
   try {
@@ -69,5 +69,6 @@ const loginUser = async (req, res) => {
 };
 
 module.exports = {
-  registerNewUser
+  registerNewUser,
+  loginUser
 }
