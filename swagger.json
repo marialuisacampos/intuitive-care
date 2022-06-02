@@ -9,20 +9,98 @@
     "version": "1.0.0"
   },
   "servers": [{
-    "url": "https://localhost:3000",
+    "url": "http://localhost:3000",
     "description": "API de teste"
   }],
   "tags": [{
-    "name": "Operadoras",
-    "description": "Gerenciamento de operadoras no banco de dados."
+      "name": "Usuários",
+      "description": "Autenticação de usuário para acesso às rotas das operadoras."
+    },
+    {
+      "name": "Operadoras",
+      "description": "Gerenciamento de operadoras no banco de dados."
     }],
     "paths": {
+      "/api/user/register": {
+        "post": {
+          "tags": ["Usuários"],
+          "summary": "Cadastro de novos usuários no banco de dados.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuários"
+                },
+                "example": {
+                  "name": "Intuitive Care",
+                  "email": "intuitivecare@email.com.br",
+                  "password": "intuitiv"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Novo usuário registrado com sucesso"
+            },
+            "400": {
+              "description": "Email informado já existe no banco de dados."
+            },
+            "404": {
+              "description": "Erro ao registrar novo usuário."
+            }
+          }
+        }
+      },
+      "/api/user/login": {
+        "post": {
+          "tags": ["Usuários"],
+          "summary": "Autenticação do usuário para adquirir o token.",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "required": "true"
+                    },
+                    "password": {
+                      "type": "string",
+                      "required": "true"
+                    }
+                  }
+                },
+                "example": {
+                  "email": "intuitivecare@email.com.br",
+                  "password": "intuitiv"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Autenticado com sucesso."
+            },
+            "400": {
+              "description": "Email ou senha incorreto."
+            },
+            "404": {
+              "description": "Erro ao autenticar usuário."
+            }
+          }
+        }
+      },
       "/api/operators": {
         "post": {
           "tags": [
             "Operadoras"
           ],
           "summary": "Registro de novas operadoras no banco de dados",
+          "security": [{
+            "bearerAuth": []
+          }],
           "requestBody": {
             "content": {
               "application/json": {
@@ -64,6 +142,9 @@
         "get": {
           "tags": ["Operadoras"],
           "summary": "Buscar por todas as operadoras existentes.",
+          "security": [{
+            "bearerAuth": []
+          }],
           "responses": {
             "200": {
               "description": "Operadoras buscadas com sucesso."
@@ -82,6 +163,9 @@
           "tags": ["Operadoras"],
           "summary": "Registrar operadoras que estão no arquivo CSV.",
           "description": "Rota para caso seja necessário realizar o cadastro das operadoras do arquivo CSV no banco de dados. Registrará apenas as que ainda não foram cadastradas anteriormente.",
+          "security": [{
+            "bearerAuth": []
+          }],
           "responses": {
             "200": {
               "description": "Operadoras registradas com sucesso OU todas as operadoras já estavam registradas no banco de dados."
@@ -97,6 +181,9 @@
           "tags": ["Operadoras"],
           "summary": "Buscar operadoras no banco de dados por filtro.",
           "description": "Pesquisa com paginação e limite por página. Pode ser realizada por registro ANS, cidade ou representante. A pesquisa por cidade e representante é por CONTAINS.",
+          "security": [{
+            "bearerAuth": []
+          }],
           "parameters": [
             {
               "in": "query",
@@ -140,6 +227,9 @@
         "put": {
           "tags": ["Operadoras"],
           "summary": "Atualização dos dados de uma operadora.",
+          "security": [{
+            "bearerAuth": []
+          }],
           "parameters": [
             {
               "in": "path",
@@ -189,6 +279,9 @@
         "delete": {
           "tags": ["Operadoras"],
           "summary": "Deletar operadora.",
+          "security": [{
+            "bearerAuth": []
+          }],
           "parameters": [{
             "in": "path",
             "name": "ansRegister",
@@ -261,6 +354,34 @@
             "type": "string"
           }
         }
+      },
+      "Usuários": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "required": "true"
+          },
+          "password": {
+            "type": "string",
+            "required": "true"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Token inválido ou não foi informado."
       }
     }
   }

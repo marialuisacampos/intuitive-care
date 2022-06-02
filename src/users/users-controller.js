@@ -11,11 +11,11 @@ const registerNewUser = async (req, res) => {
   try {
     const user = req.body;
     const { email, password } = req.body;
-
+    console.log(email, password)
     const verfiyUser = await verfiyUserExistsOnDatabase(email);
     console.log(verfiyUser)
 
-    if (verfiyUser.length !== 0) {
+    if (verfiyUser !== null) {
       return res.status(400).json({ message: 'Email already exists.' });
     } else {
       const hashPassword = await bcrypt.hash(password, 8);
