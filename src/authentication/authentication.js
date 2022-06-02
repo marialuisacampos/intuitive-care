@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const authConfig = require('./authentication-config');
+const authenticationConfig = require('./authentication-config');
 
 module.exports = async (req, res, next) => {
   const authHeaders = req.headers.authorization;
@@ -9,12 +9,12 @@ module.exports = async (req, res, next) => {
     return res.status(401).json({ error: 'Token not send!' });
   }
 
-  const [, token] = authHeaders.split(' ');
+  const [ , token] = authHeaders.split(' ');
 
   try {
     const decodePassword = await promisify(jwt.verify)(
       token,
-      authConfig.secret,
+      authenticationConfig.secret,
     );
 
     req.userId = decodePassword.id;

@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const registerNewUserOnDatabase = (user) => User(user).save();
 
-const verfiyUserExistsOnDatabase = (email) => User.findOne({ email });
+const verfiyUserExistsOnDatabase = userEmail => User.findOne({ email: userEmail });
 
 const checkPasswordOnDatabase = (password, passwordHash) => bcrypt.compare(password, passwordHash);
 
