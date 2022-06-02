@@ -1,0 +1,267 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Intuitive Care",
+    "description": "APIRest para gerenciamento de operadoras.",
+    "contacts":{
+      "email": "mluisa.cfl@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [{
+    "url": "https://localhost:3000",
+    "description": "API de teste"
+  }],
+  "tags": [{
+    "name": "Operadoras",
+    "description": "Gerenciamento de operadoras no banco de dados."
+    }],
+    "paths": {
+      "/api/operators": {
+        "post": {
+          "tags": [
+            "Operadoras"
+          ],
+          "summary": "Registro de novas operadoras no banco de dados",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operadoras"
+                },
+                "example": {
+                    "ansRegister": "12597654863",
+                    "cnpj": "37914667000693",
+                    "corporateName": "Serviços LTDA",
+                    "fantasyName": "Serviços shows",
+                    "modality": "Saúde",
+                    "adress": "Rua da Saúde, 50, sala 1015",
+                    "district": "Bairro",
+                    "city": "Recife",
+                    "state": "PE",
+                    "cep": "50000000",
+                    "telephone": "81996096815",
+                    "fax": "12345698",
+                    "email": "empresa@email.com",
+                    "representative": "Maria Luísa",
+                    "representativeJob": "Gerente de Vendas"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Operadora registrada com sucesso"
+            },
+            "400": {
+              "description": "Registro ANS já existe."
+            },
+            "404": {
+              "description": "Erro ao registrar operadora."
+            }
+          }
+        },
+        "get": {
+          "tags": ["Operadoras"],
+          "summary": "Buscar por todas as operadoras existentes.",
+          "responses": {
+            "200": {
+              "description": "Operadoras buscadas com sucesso."
+            },
+            "400": {
+              "description": "Não existem operadoras no banco de dados."
+            },
+            "404": {
+              "description": "Erro ao buscar todas as operadoras."
+            }
+          }
+        }
+      },
+      "/api/operators/csv": {
+        "post": {
+          "tags": ["Operadoras"],
+          "summary": "Registrar operadoras que estão no arquivo CSV.",
+          "description": "Rota para caso seja necessário realizar o cadastro das operadoras do arquivo CSV no banco de dados. Registrará apenas as que ainda não foram cadastradas anteriormente.",
+          "responses": {
+            "200": {
+              "description": "Operadoras registradas com sucesso OU todas as operadoras já estavam registradas no banco de dados."
+            },
+            "404": {
+              "description": "Erro ao registrar operadoras do arquivo CSV."
+            }
+          }
+        }
+      },
+      "/api/operators/search": {
+        "get": {
+          "tags": ["Operadoras"],
+          "summary": "Buscar operadoras no banco de dados por filtro.",
+          "description": "Pesquisa com paginação e limite por página. Pode ser realizada por registro ANS, cidade ou representante. A pesquisa por cidade e representante é por CONTAINS.",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "searchBy",
+              "required": "true",
+              "description": "Tipo de filtro que será utilizado: register || city || representative."
+            },
+            {
+              "in": "query",
+              "name": "filter",
+              "required": "true",
+              "description": "Conteúdo a ser pesquisado."
+            },
+            {
+              "in": "query",
+              "name": "page",
+              "required": "true",
+              "description": "Página a ser visualizada da pesquisa."
+            },
+            {
+              "in": "query",
+              "name": "limit",
+              "required": "true",
+              "description": "Quantidade de dados a serem visualizados por página."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operadoras pesquisadas com sucesso."
+            },
+            "400": {
+              "description": "Nenhuma operadora encontrada de acordo com a pesquisa."
+            },
+            "404": {
+              "description": "Erro ao pesquisar operadoras."
+            }
+          }
+        }
+      },
+      "/api/operators/{ansRegister}": {
+        "put": {
+          "tags": ["Operadoras"],
+          "summary": "Atualização dos dados de uma operadora.",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "ansRegister",
+              "required": "true",
+              "description": "Registro ANS da operadora que terá seus dados atualizados. No request body pode ser passado apenas o que será alterado."
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operadoras"
+                },
+                "example": {
+                  "ansRegister": "12597654863",
+                    "cnpj": "37914667000693",
+                    "corporateName": "Serviços LTDA",
+                    "fantasyName": "Serviços shows",
+                    "modality": "Saúde",
+                    "adress": "Rua da Saúde, 50, sala 1015",
+                    "district": "Bairro",
+                    "city": "Recife",
+                    "state": "PE",
+                    "cep": "50000000",
+                    "telephone": "81996096815",
+                    "fax": "12345698",
+                    "email": "empresa@email.com",
+                    "representative": "Maria Luísa",
+                    "representativeJob": "Gerente de Vendas"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Operadora atualizada com sucesso."
+            },
+            "400": {
+              "description": "Registro ANS informado não existe."
+            },
+            "404": {
+              "description": "Erro ao atualizar operadora."
+            }
+          }
+        },
+        "delete": {
+          "tags": ["Operadoras"],
+          "summary": "Deletar operadora.",
+          "parameters": [{
+            "in": "path",
+            "name": "ansRegister",
+            "required": "true",
+            "description": "Registro ANS da operadora que será deletada."
+          }],
+          "responses": {
+            "200": {
+              "description": "Operadora deletada com sucesso."
+            },
+            "400": {
+              "description": "Registro ANS informado não existe."
+            },
+            "404": {
+              "description": "Erro ao deletar operadora."
+            }
+          }
+        }
+      }
+    },
+
+  "components": {
+    "schemas": {
+      "Operadoras": {
+        "type": "object",
+        "properties": {
+          "ansRegister": {
+            "type": "string"
+          },
+          "cnpj": {
+            "type": "string"
+          },
+          "corporateName": {
+            "type": "string"
+          },
+          "fantasyName": {
+            "type": "string"
+          },
+          "modality": {
+            "type": "string"
+          },
+          "adress": {
+            "type": "string"
+          },
+         " district": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "cep": {
+            "type": "string"
+          },
+          "telephone": {
+            "type": "string"
+          },
+          "fax": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "representative": {
+            "type": "string"
+          },
+          "representativeJob": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

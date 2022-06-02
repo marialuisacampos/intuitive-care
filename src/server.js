@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
 const { connectionString } = require('./config/database');
 const healthRoute = require('./config/health');
 const operatorsRoutes = require('./operators/operator-routes');
@@ -13,6 +15,7 @@ const createServer = () => {
 const configurateServer = (app) => {
   app.use(express.json());
   configurateRoutes(app);
+  app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 };
 
 const configurateRoutes = (app) => {
