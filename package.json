@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/marialuisacampos/intuitive-care#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.18.1",
     "mongoose": "^6.3.4",
     "swagger-ui-express": "^4.4.0"
