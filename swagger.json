@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Intuitive Care",
+    "title": "Operators API",
     "description": "APIRest para gerenciamento de operadoras.",
     "contacts":{
       "email": "mluisa.cfl@gmail.com"
