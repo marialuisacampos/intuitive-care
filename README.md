@@ -1,5 +1,4 @@
-# Intuitive Care
-![](https://media.giphy.com/media/EGh1eaLhshNxfQ68ds/giphy.gif)
+# Operators API
 
 ## 🎯 Objective
 An API to create operators manually or from a CSV file and also update, delete and search them.
