@@ -38,9 +38,31 @@ describe('Operators Routes', () => {
     await mongoose.connection.close();
   });
 
+  let token;
+  
+  beforeAll(async () => {
+    await supertest(app)
+      .post('/api/user/register')
+      .send({
+        name: "Mock user",
+        email: "user@mock.com",
+        password: "mock1234"
+      });
+    
+    const { body } = await supertest(app)
+      .post('/api/user/login')
+      .send({
+        email: "user@mock.com",
+        password: "mock1234"
+      })
+    
+    token = body.token;
+  })
+
   beforeEach(async () => {
     await supertest(app)
       .post('/api/operators')
+      .set('Authorization', 'Bearer ' + token)
       .send(mockOperator);
   })
 
@@ -52,6 +74,7 @@ describe('Operators Routes', () => {
 
     const { statusCode, body } = await supertest(app)
       .post('/api/operators')
+      .set('Authorization', 'Bearer ' + token)
       .send(mockOperatorLocal);
     
     expect(statusCode).toBe(200);
@@ -83,6 +106,7 @@ describe('Operators Routes', () => {
   it('should not register operator with the same ans register', async () => {
     const { statusCode, body } = await supertest(app)
       .post('/api/operators')
+      .set('Authorization', 'Bearer ' + token)
       .send(mockOperator);
 
     expect(statusCode).toBe(400);
@@ -91,7 +115,8 @@ describe('Operators Routes', () => {
 
   it('should search all operators', async () => {
     const { statusCode } = await supertest(app)
-      .get('/api/operators');
+      .get('/api/operators')
+      .set('Authorization', 'Bearer ' + token);
 
     expect(statusCode).toBe(200);
   });
@@ -100,6 +125,7 @@ describe('Operators Routes', () => {
   it('should search operator by register filter', async () => {
     const { statusCode, body } = await supertest(app)
       .get(`/api/operators/search?searchBy=register&filter=${mockOperator.ansRegister}&page=1&limit=1`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual([{
@@ -113,6 +139,7 @@ describe('Operators Routes', () => {
   it('should search operator by city filter', async () => {
     const { statusCode, body } = await supertest(app)
       .get(`/api/operators/search?searchBy=city&filter=${mockOperator.city}&page=1&limit=1`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual([{
@@ -126,6 +153,7 @@ describe('Operators Routes', () => {
   it('should search operator by representative filter', async () => {
     const { statusCode, body } = await supertest(app)
       .get(`/api/operators/search?searchBy=representative&filter=${mockOperator.representative}&page=1&limit=1`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual([{
@@ -139,6 +167,7 @@ describe('Operators Routes', () => {
   it('should search operator by city filter', async () => {
     const { statusCode, body } = await supertest(app)
       .get(`/api/operators/search?searchBy=city&filter=${mockOperator.city}&page=1&limit=1`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual([{
@@ -152,6 +181,7 @@ describe('Operators Routes', () => {
   it('should not search if the filter does not exist', async () => {
     const { statusCode, body } = await supertest(app)
       .get(`/api/operators/search?searchBy=city&filter=cidade&page=1&limit=1`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(400);
     expect(body).toEqual({ message: `There is no operator with this city: cidade` });
@@ -161,6 +191,7 @@ describe('Operators Routes', () => {
     const { statusCode, body } = await supertest(app)
       .put(`/api/operators/${mockOperator.ansRegister}`)
       .send({ representative: 'Representante' })
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual({ message: `Operator with ANS Register ${mockOperator.ansRegister} updated.` });
@@ -169,7 +200,9 @@ describe('Operators Routes', () => {
   it('should not update operator with ans register inexistent', async () => {
     const { statusCode, body } = await supertest(app)
       .put(`/api/operators/1111111`)
-      .send({ representative: 'Representante' })
+      .set('Authorization', 'Bearer ' + token)
+      .send({ representative: 'Representante' });
+      
     
     expect(statusCode).toBe(400);
     expect(body).toEqual({ message: 'ANS Register 1111111 does not exist.' });
@@ -178,12 +211,15 @@ describe('Operators Routes', () => {
   it('should search all operators and return empty', async () => {
     await supertest(app)
       .delete('/api/operators/176259846')
+      .set('Authorization', 'Bearer ' + token);
 
       await supertest(app)
       .delete('/api/operators/12597654863')
+      .set('Authorization', 'Bearer ' + token);
     
     const { statusCode, body } = await supertest(app)
       .get('/api/operators')
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(400);
     expect(body).toEqual({ message: 'There is no operators on database.' })
@@ -192,16 +228,19 @@ describe('Operators Routes', () => {
   it('should register all operators from csv file', async() => {
     const { statusCode } = await supertest(app)
       .post('/api/operators/csv')
+      .set('Authorization', 'Bearer ' + token);
 
     expect(statusCode).toBe(200);
   }, 10000);
 
   it('should not register an operator successfully', async () => {
     await supertest(app)
-      .post('/api/operators/csv');
+      .post('/api/operators/csv')
+      .set('Authorization', 'Bearer ' + token);
     
     const { statusCode, body } = await supertest(app)
-      .post('/api/operators/csv');
+      .post('/api/operators/csv')
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual({
@@ -211,7 +250,8 @@ describe('Operators Routes', () => {
 
   it('should delete operator successfully', async () => {
     const { statusCode, body } = await supertest(app)
-      .delete(`/api/operators/${mockOperator.ansRegister}`);
+      .delete(`/api/operators/${mockOperator.ansRegister}`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(200);
     expect(body).toEqual({ message: `Operator with ANS Register ${mockOperator.ansRegister} deleted` });
@@ -219,7 +259,8 @@ describe('Operators Routes', () => {
 
   it('should not delete operator with ans register inexistent', async () => {
     const { statusCode, body } = await supertest(app)
-      .delete(`/api/operators/12368724`);
+      .delete(`/api/operators/12368724`)
+      .set('Authorization', 'Bearer ' + token);
     
     expect(statusCode).toBe(400);
     expect(body).toEqual({ message: 'ANS Register does not exist.' });
