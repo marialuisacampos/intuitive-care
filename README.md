@@ -20,7 +20,7 @@ Uma API para registrar operadoras manualmente ou de um arquivo CSV. Também é p
 - npm start (para utilizar a API em sua máquina)
 
 ## ❗ CSV File
-Para utilizar a rota de registro por arquivo CSV, adicione o arquivo dentro da pasta SRC, com o nome 'Relatorio_cadop.csv'.
+Para utilizar a rota de registro por arquivo CSV, adicione o arquivo (Relatorio_cadop.csv) dentro da pasta SRC.
 
 ## 📄 Swagger
 - Depois de executar npm start, acesse https://localhost:3000/api/api-docs
