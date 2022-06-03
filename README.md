@@ -15,8 +15,8 @@ An API to create operators manually or from a CSV file and also update, delete a
 - NodeJS installed (version 16.13.1 was used)
 
 ## ✅ Installing
-- git clone https://github.com/marialuisacampos/intuitive-care
-- cd intuitive-care
+- git clone https://github.com/marialuisacampos/operators-api
+- cd operators-api
 - npm install
 - npm start (to use locally in your machine)
 
